@@ -1,0 +1,14 @@
+{
+  "userId": "0ro1",
+  "userName": "Jack",
+  "userAvatar": "/src/assets/Jack.JPG",
+  "cognitiveLevel": {
+    "Openness": [],
+    "Conscientiousness": [],
+    "Extraversion": [],
+    "Agreeableness": [],
+    "Neuroticism": [],
+    "Engagement": []
+  },
+  "tracingX":[]
+}

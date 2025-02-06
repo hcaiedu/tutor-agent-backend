@@ -1,0 +1,42 @@
+{
+  "userId": "Y25C",
+  "userName": "Jim",
+  "userAvatar": "/src/assets/Jim.JPG",
+  "cognitiveLevel": {
+    "Openness": [
+      0.59,
+      0.89,
+      0.41
+    ],
+    "Conscientiousness": [
+      0.1,
+      0.76,
+      0.42
+    ],
+    "Extraversion": [
+      0.87,
+      0.35,
+      0.38
+    ],
+    "Agreeableness": [
+      0.09,
+      0.42,
+      0.94
+    ],
+    "Neuroticism": [
+      0.56,
+      0.94,
+      0.46
+    ],
+    "Engagement": [
+      0.72,
+      0.85,
+      0.76
+    ]
+  },
+  "tracingX": [
+    "01:56:19 PM",
+    "01:13:46 PM",
+    "01:15:57 PM"
+  ]
+}
