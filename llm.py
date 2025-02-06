@@ -63,7 +63,7 @@ def query_api(roomId):
   client = OpenAI(
     # #将这里换成你的密钥
     api_key="sk-4CFE7AOiCwVbiRXw65A86b969f204a98B4Dd5bB0D97c9b70",
-    # 这里将官方的接口访问地址，替换成aihubmix的入口地址
+    # 这里将官方的接口访问地址，替换成aihubmix的入口地址aa
     base_url="https://aihubmix.com/v1"
   )
   new_messages = message_construct(roomId)
