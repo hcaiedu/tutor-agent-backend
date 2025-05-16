@@ -1,0 +1,20 @@
+{
+  "roomId": "Da1hjQ",
+  "roomName": "a",
+  "roomCustomName": "a",
+  "memberNum": 2,
+  "chatTime": 2,
+  "assertiveness": "Midium",
+  "topic": "a",
+  "roomMember": [],
+  "history": [
+    {
+      "userId": "u000",
+      "userName": "Agent",
+      "userAvatar": "/src/assets/Agent.PNG",
+      "text": "Welcome everyone to today\u2019s discussion. The topic we are discussing is 'a'Feel free to share your thoughts!",
+      "time": "03:01:49 PM",
+      "roomId": "Da1hjQ"
+    }
+  ]
+}

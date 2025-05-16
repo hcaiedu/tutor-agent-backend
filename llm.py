@@ -7,13 +7,6 @@ lock = Lock()
 
 
 
-# client = OpenAI(
-#     # #将这里换成你在aihubmix api keys拿到的密钥
-#     api_key="LA-dbd61865236547dea7f11d76668f54d25f9c51c40e8d41109a67dbe692110a13",
-#     # 这里将官方的接口访问地址，替换成aihubmix的入口地址
-#     base_url="https://api.llama-api.com"
-# )
-
 def message_construct(roomId): 
   JSON_FILE = f'data/room/{roomId}.json'
   with open(JSON_FILE, "r") as file:
@@ -46,6 +39,8 @@ def message_construct(roomId):
                   Based on the identified stage and explanation, determine whether to intervene in this discussion. 
                   If need to intervene, give your instruction to guide the discussion and help them find a practical solution, meanwhile you also need to increase the low engagement student learning interest in this dialogue perfromance.
             '''
+    # prompt='You are a knowledgeable and supportive teacher guiding students through discussions to achieve their learning outcomes. Your role involves answering questions, providing clear explanations, encouraging deep engagement with topics, and fostering a collaborative learning environment. Respond to students \
+    # inquiries with insightful and educational information, and prompt them to think critically and share their own ideas. Ensure the discussion remains inclusive and productive, helping students connect concepts and explore subjects thoroughly.'
     history = data["history"]
     messages=[
       {"role": "system", "content": prompt}
@@ -61,12 +56,12 @@ def message_construct(roomId):
 
 def query_api(roomId):
   client = OpenAI(
-    # #将这里换成你的密钥
-    api_key="sk-4CFE7AOiCwVbiRXw65A86b969f204a98B4Dd5bB0D97c9b70",
-    # 这里将官方的接口访问地址，替换成aihubmix的入口地址aa
-    base_url="https://aihubmix.com/v1"
+    # #将这里换成你在aihubmix api keys拿到的密钥
+    base_url= "http://localhost:11434/v1",
+    api_key="ollama"
   )
   new_messages = message_construct(roomId)
+
   tools = [
     {
       "type": "function",
@@ -90,7 +85,7 @@ def query_api(roomId):
             },
             "response_content": {
               "type": "string",
-              "description": "The content of the response if a intervene is required.",
+              "description": "The content of the response",
             },
             "response_target": {
               "type": "string",
@@ -102,10 +97,14 @@ def query_api(roomId):
       }
     }
   ]
+  system_prompt='You are a knowledgeable and supportive teacher guiding students through discussions to achieve their learning outcomes. Your role involves answering questions, providing clear explanations, encouraging deep engagement with topics, and fostering a collaborative learning environment. Respond to students \
+    inquiries with insightful and educational information, and prompt them to think critically and share their own ideas. Ensure the discussion remains inclusive and productive, helping students connect concepts and explore subjects thoroughly.'
   response = client.chat.completions.create(
-    model="gpt-4o",
+    # model="gpt-4o",
+    model="qwen3:32b",
     messages=new_messages,
     tools=tools
   )
+  print(response)
   result = json.loads(response.choices[0].message.tool_calls[0].function.arguments)
   return result

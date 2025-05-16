@@ -1,0 +1,207 @@
+{
+  "roomId": "rqgm5p",
+  "roomName": "Group 1",
+  "roomCustomName": "Group 1",
+  "memberNum": 3,
+  "chatTime": 10,
+  "assertiveness": "Midium",
+  "topic": "How to do the Collaborative Learning",
+  "roomMember": [
+    {
+      "memberId": "K6xK",
+      "memberName": "Alice",
+      "memberAvatar": "/src/assets/Alice.JPG"
+    },
+    {
+      "memberId": "poxk",
+      "memberName": "David",
+      "memberAvatar": "/src/assets/David.JPG"
+    }
+  ],
+  "history": [
+    {
+      "userId": "u000",
+      "userName": "Agent",
+      "userAvatar": "/src/assets/Agent.PNG",
+      "text": "Welcome everyone to today’s discussion. The topic we are discussing is 'How to do the Collaborative Learning'Feel free to share your thoughts!",
+      "time": "04:33:34 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "hello",
+      "time": "4:34:19 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "u000",
+      "userName": "Agent",
+      "userAvatar": "/src/assets/Agent.PNG",
+      "text": "Hi Alice! Let's get started. How would you define collaborative learning? What do you think are the key elements of effective group work? I'll share my perspective after hearing yours!",
+      "time": "04:34:39 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "Hf37",
+      "userName": "David",
+      "userAvatar": "/src/assets/David.JPG",
+      "text": "I donot know, can you show me some examples?",
+      "time": "4:36:02 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "u000",
+      "userName": "Agent",
+      "userAvatar": "/src/assets/Agent.PNG",
+      "text": "Sure Alice! For example, students working together on a research project where they divide tasks, discuss findings, and combine results into a final report. Or peers teaching each other concepts through peer instruction. Would you like me to elaborate on any example? David, would you like to share if any classroom group activities come to mind that qualify as collaborative learning?",
+      "time": "04:36:26 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "Hf37",
+      "userName": "David",
+      "userAvatar": "/src/assets/David.JPG",
+      "text": "hello",
+      "time": "4:48:46 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "hello",
+      "time": "4:58:55 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "hello",
+      "time": "5:01:00 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "hi",
+      "time": "5:01:07 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "gagaaga",
+      "time": "5:01:17 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "u000",
+      "userName": "Agent",
+      "userAvatar": "/src/assets/Agent.PNG",
+      "text": "I notice we haven't heard much from David yet - let's work together! Alice, you asked for examples of collaborative learning. Here's another: when teams in a class debate different perspectives on a topic then synthesize the best arguments. David, would you like to (1) share how you've experienced collaboration in classes, or (2) suggest an approach for our own group to structure this discussion better?",
+      "time": "05:01:54 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "yihajajasafsadfjsad",
+      "time": "5:02:32 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "wuli",
+      "time": "5:02:36 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "agagdafj",
+      "time": "5:02:37 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "e",
+      "time": "5:02:38 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "e",
+      "time": "5:02:39 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "u000",
+      "userName": "Agent",
+      "userAvatar": "/src/assets/Agent.PNG",
+      "text": "Let's refocus! David, could you point to something specific about collaborative learning that interests you? For instance: What challenges have you encountered in group work that we could address together? Alice, want to share a personal experience where collaboration helped/sometimes hindered your learning? This will help us define our shared objectives!",
+      "time": "05:03:16 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "asdfjaklsd",
+      "time": "5:04:41 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "jsafljas\\",
+      "time": "5:04:41 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "asfkl;djsaf",
+      "time": "5:04:42 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "jsakdfljas;dfkja",
+      "time": "5:04:43 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "5rLY",
+      "userName": "Alice",
+      "userAvatar": "/src/assets/Alice.JPG",
+      "text": "ajsdflkjsafd",
+      "time": "5:04:44 PM",
+      "roomId": "rqgm5p"
+    },
+    {
+      "userId": "u000",
+      "userName": "Agent",
+      "userAvatar": "/src/assets/Agent.PNG",
+      "text": "Let's clarify our objectives. David, click 'Raise Hand' if any of these resonate: (1) Learning how to divide tasks in groups (2) Improving communication in team projects (3) Creating a collaboration rubric. Alice, could you share a challenge you faced in group work that we might address together?",
+      "time": "05:05:14 PM",
+      "roomId": "rqgm5p"
+    }
+  ]
+}

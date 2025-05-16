@@ -241,7 +241,7 @@ def handle_message(data):
         room_counters[roomId] = 0
       save_message_to_json(data['message'])
       room_counters[roomId] += 1
-      if room_counters[roomId] >= 4:
+      if room_counters[roomId] >= 5:
         send_system_message(roomId)
         
 def send_system_message(roomId):
@@ -265,4 +265,4 @@ def send_system_message(roomId):
     room_counters[roomId] = 0
 
 if __name__ == "__main__":
-  socketio.run(app, host="0.0.0.0", port=5001, debug=True)
+  socketio.run(app, host="127.0.0.1", port=5000, debug=True)

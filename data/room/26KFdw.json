@@ -1,0 +1,106 @@
+{
+  "roomId": "26KFdw",
+  "roomName": "test_ollama",
+  "roomCustomName": "test",
+  "memberNum": 4,
+  "chatTime": 4,
+  "assertiveness": "Low",
+  "topic": "1245",
+  "roomMember": [
+    {
+      "memberId": "2DCp",
+      "memberName": "Bob",
+      "memberAvatar": "/src/assets/Bob.JPG"
+    }
+  ],
+  "history": [
+    {
+      "userId": "u000",
+      "userName": "Agent",
+      "userAvatar": "/src/assets/Agent.PNG",
+      "text": "Welcome everyone to today�s discussion. The topic we are discussing is '1245'Feel free to share your thoughts!",
+      "time": "03:31:11 PM",
+      "roomId": "26KFdw"
+    },
+    {
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "hello",
+      "time": "4:03:57 PM",
+      "roomId": "26KFdw"
+    },
+    {
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "hello",
+      "time": "4:05:38 PM",
+      "roomId": "26KFdw"
+    },
+    {
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "hello",
+      "time": "4:07:10 PM",
+      "roomId": "26KFdw"
+    },
+    {
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "hello",
+      "time": "4:07:49 PM",
+      "roomId": "26KFdw"
+    },
+    {
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "hello",
+      "time": "4:15:23 PM",
+      "roomId": "26KFdw"
+    },
+    {
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "hello",
+      "time": "4:30:21 PM",
+      "roomId": "26KFdw"
+    },
+    {
+      "userId": "u000",
+      "userName": "Agent",
+      "userAvatar": "/src/assets/Agent.PNG",
+      "text": "Hello Bob! Since our topic is '1245', let's start by defining what this topic means to you. How would you describe the core problem or objective here? Feel free to propose an initial direction or question we could explore together!",
+      "time": "04:31:00 PM",
+      "roomId": "26KFdw"
+    },
+    {
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "hello",
+      "time": "4:58:00 PM",
+      "roomId": "26KFdw"
+    },
+    {
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "hello",
+      "time": "5:00:13 PM",
+      "roomId": "26KFdw"
+    },
+    {
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "hi",
+      "time": "5:01:12 PM",
+      "roomId": "26KFdw"
+    }
+  ]
+}

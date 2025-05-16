@@ -3,12 +3,33 @@
   "userName": "David",
   "userAvatar": "/src/assets/David.JPG",
   "cognitiveLevel": {
-    "Openness": [],
-    "Conscientiousness": [],
-    "Extraversion": [],
-    "Agreeableness": [],
-    "Neuroticism": [],
-    "Engagement": []
+    "Openness": [
+      0.64,
+      0.64
+    ],
+    "Conscientiousness": [
+      0.11,
+      0.5
+    ],
+    "Extraversion": [
+      0.09,
+      0.7
+    ],
+    "Agreeableness": [
+      0.69,
+      0.54
+    ],
+    "Neuroticism": [
+      0.38,
+      0.72
+    ],
+    "Engagement": [
+      0.92,
+      0.46
+    ]
   },
-  "tracingX":[]
+  "tracingX": [
+    "04:36:26 PM",
+    "04:48:46 PM"
+  ]
 }
