@@ -43,99 +43,91 @@
       "roomId": "cCwZpS"
     },
     {
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "Check this out! I just used Claude to analyze 20 research papers in 10 minutes. This is the future of academia!",
+      "time": "16:18:11",
+      "roomId": "cCwZpS"
+    },
+    {
       "userId": "Y25C",
       "userName": "Jim",
       "userAvatar": "/src/assets/Jim.JPG",
-      "text": "Many of my classmates use generative AI, like ChatGPT. It does a great job answering our questions. So, I think we can discuss it from the perspective of whether generative AI is reliable.",
-      "time": "13:56:19",
+      "text": "Shouldn't paper analysis be about developing your own critical lens? This feels like outsourcing cognition.",
+      "time": "16:19:00",
       "roomId": "cCwZpS"
     },
     {
-      "userId": "5rLY",
-      "userName": "Alice",
-      "userAvatar": "/src/assets/Alice.JPG",
-      "text": "However, I think this perspective has issues because the teacher mentioned that the target users are college students, but your view only discusses generative AI. I think we might need a more relevant perspective.",
-      "time": "13:57:15",
-      "roomId": "cCwZpS"
-    },
-    {
-      "userId": "8yKu",
-      "userName": "Bob",
-      "userAvatar": "/src/assets/Bob.JPG",
-      "text": "Oh, you make a good point. So what should we discuss?",
-      "time": "13:59:34",
-      "roomId": "cCwZpS"
-    },
-    {
-      "userId": "8yKu",
-      "userName": "Bob",
-      "userAvatar": "/src/assets/Bob.JPG",
-      "text": "Perhaps we can think of a perspective that combines the use of generative AI with college students. But I don’t have any ideas at the moment.",
-      "time": "13:59:46",
-      "roomId": "cCwZpS"
-    },
-    {
-      "userId": "8yKu",
-      "userName": "Bob",
-      "userAvatar": "/src/assets/Bob.JPG",
-      "text": "test",
-      "time": "14:00:57",
+      "userId": "Y25C",
+      "userName": "Jim",
+      "userAvatar": "/src/assets/Jim.JPG",
+      "text": "Actually, Northwestern University has developed AI accountability standards. The key is transparency in workflow documentation.",
+      "time": "16:19:29",
       "roomId": "cCwZpS"
     },
     {
       "userId": "u000",
       "userName": "Agent",
       "userAvatar": "/src/assets/Agent.PNG",
-      "text": "Alice has pointed out that the current perspective might not address the issue from the lens of college students specifically, which is an important consideration. Let’s brainstorm some perspectives that focus on how college students, particularly, use or could use generative AI effectively within their studies. For example, consider discussing potential benefits and drawbacks for college students, or focusing on specific academic areas where AI might be most beneficial. David, since we haven't heard from you yet, do you have any ideas or experiences related to how generative AI might impact college students? This could help us enrich our exploration of perspectives.",
-      "time": "02:01:02 PM",
-      "roomId": "cCwZpS"
-    },
-    {
-      "userId": "5rLY",
-      "userName": "Alice",
-      "userAvatar": "/src/assets/Alice.JPG",
-      "text": "ashsja",
-      "time": "14:38:54",
-      "roomId": "cCwZpS"
-    },
-    {
-      "userId": "Y25C",
-      "userName": "Jim",
-      "userAvatar": "/src/assets/Jim.JPG",
-      "text": "我们可以讨论下生成式AI对学生的认知影响",
-      "time": "13:13:46",
+      "text": "How might we quantify 'transparent workflow' in different disciplines? Should art students document AI usage differently than engineering students?",
+      "time": "16:20:29",
       "roomId": "cCwZpS"
     },
     {
       "userId": "8yKu",
       "userName": "Bob",
       "userAvatar": "/src/assets/Bob.JPG",
-      "text": "你说的对，该从哪些方面出发呢",
-      "time": "13:14:16",
+      "text": "Look at this study - students using AI writing tools showed 34% decline in original argument construction. This is dangerous!",
+      "time": "16:30:58",
       "roomId": "cCwZpS"
     },
     {
-      "userId": "5rLY",
-      "userName": "Alice",
-      "userAvatar": "/src/assets/Alice.JPG",
-      "text": "不如从学生对大模型的依赖导致其认知能力下降的方面入手，你们觉得如何",
-      "time": "13:15:13",
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "hello",
+      "time": "16:57:07",
       "roomId": "cCwZpS"
     },
     {
-      "userId": "Y25C",
-      "userName": "Jim",
-      "userAvatar": "/src/assets/Jim.JPG",
-      "text": "我之前参与过一些相关的研究工作，我们可以讨论一下学生的参与度和依赖行为的关联",
-      "time": "13:15:54",
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "thank you",
+      "time": "16:57:14",
+      "roomId": "cCwZpS"
+    },
+    {
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "thank you very much",
+      "time": "17:03:57",
+      "roomId": "cCwZpS"
+    },
+    {
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "aaaaaaaa",
+      "time": "17:04:00",
+      "roomId": "cCwZpS"
+    },
+    {
+      "userId": "8yKu",
+      "userName": "Bob",
+      "userAvatar": "/src/assets/Bob.JPG",
+      "text": "aaa",
+      "time": "17:04:15",
       "roomId": "cCwZpS"
     },
     {
       "userId": "u000",
       "userName": "Agent",
       "userAvatar": "/src/assets/Agent.PNG",
-      "text": "The discussion is exploring the impact of generative AI on college students, particularly focusing on cognitive effects and dependency. You’ve started considering new perspectives, which is excellent for broadening the discussion scope. To make this exploration phase more effective, each member could share a unique story or find specific information relating to how AI impacts learning behaviors, both positively and negatively. \n\nAdditionally, try to incorporate personal anecdotes or recent studies that might better illustrate these points. This will not only enrich our exploration but also help each of you connect closely with different dimensions of the topic. \n\nDavid, if you have any relevant insights or can pose questions to further ignite this exploration, that would be beneficial for keeping engagement high!",
-      "time": "01:15:57 PM",
+      "text": "It's fantastic to see you all exploring different angles regarding generative AI in academia. Bob, your experience with Claude highlights the potential efficiency that AI can bring to research. However, the point Jim raised is essential - balancing AI help with developing our skills is crucial. Let's hear more about your thoughts on the AI accountability standards and how they may foster responsible use of AI across various disciplines. Bob, perhaps you could elaborate on the potential dangers you've mentioned? For everyone, consider how these perspectives can blend to form responsible and effective strategies for using AI.",
+      "time": "05:04:24 PM",
       "roomId": "cCwZpS"
     }
   ]

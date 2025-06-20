@@ -3,40 +3,29 @@
   "userName": "Alice",
   "userAvatar": "/src/assets/Alice.JPG",
   "cognitiveLevel": {
-    "Openness": [
-      0.1,
-      0.08,
-      0.74
+    "Joy": [
+      0.3
     ],
-    "Conscientiousness": [
-      0.67,
-      0.6,
-      0.24
+    "Trust": [
+      0.4
     ],
-    "Extraversion": [
-      0.7,
-      0.63,
-      0.66
+    "Fear": [
+      0.65
     ],
-    "Agreeableness": [
-      0.34,
-      0.15,
-      0.13
+    "Surprise": [
+      0.1
     ],
-    "Neuroticism": [
-      0.74,
-      0.11,
-      0.67
+    "Anger": [
+      0.2
+    ],
+    "Disgust": [
+      0.3
     ],
     "Engagement": [
-      0.51,
-      0.18,
-      0.22
+      0.55
     ]
   },
   "tracingX": [
-    "01:57:15 PM",
-    "02:38:54 PM",
-    "01:15:13 PM"
+
   ]
 }

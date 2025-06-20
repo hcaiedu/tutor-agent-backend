@@ -61,11 +61,12 @@ def update_cognitive():
       JSON_FILE = 'data/user/' + request.args.get('userName') + '.json'
       with open(JSON_FILE, "r") as file:
         old_data = json.load(file)
-        old_data["cognitiveLevel"]["Openness"].append(round(random.random(),2))
-        old_data["cognitiveLevel"]["Conscientiousness"].append(round(random.random(),2))
-        old_data["cognitiveLevel"]["Extraversion"].append(round(random.random(),2))
-        old_data["cognitiveLevel"]["Agreeableness"].append(round(random.random(),2))
-        old_data["cognitiveLevel"]["Neuroticism"].append(round(random.random(),2))
+        old_data["cognitiveLevel"]["Joy"].append(round(random.random(),2))
+        old_data["cognitiveLevel"]["Trust"].append(round(random.random(),2))
+        old_data["cognitiveLevel"]["Fear"].append(round(random.random(),2))
+        old_data["cognitiveLevel"]["Surprise"].append(round(random.random(),2))
+        old_data["cognitiveLevel"]["Anger"].append(round(random.random(),2))
+        old_data["cognitiveLevel"]["Disgust"].append(round(random.random(),2))
         old_data["cognitiveLevel"]["Engagement"].append(round(random.random(),2))
         old_data["tracingX"].append(datetime.now().strftime("%I:%M:%S %p"))
         # 4. 将更新后的数据写回文件
@@ -73,11 +74,12 @@ def update_cognitive():
             json.dump(old_data, f, ensure_ascii=False, indent=2)
         res = {
           "cognitive_level":[
-            old_data["cognitiveLevel"]["Openness"][-1],
-            old_data["cognitiveLevel"]["Conscientiousness"][-1],
-            old_data["cognitiveLevel"]["Extraversion"][-1],
-            old_data["cognitiveLevel"]["Agreeableness"][-1],
-            old_data["cognitiveLevel"]["Neuroticism"][-1]
+            old_data["cognitiveLevel"]["Joy"][-1],
+            old_data["cognitiveLevel"]["Trust"][-1],
+            old_data["cognitiveLevel"]["Fear"][-1],
+            old_data["cognitiveLevel"]["Surprise"][-1],
+            old_data["cognitiveLevel"]["Anger"][-1],
+            old_data["cognitiveLevel"]["Disgust"][-1]
           ],
           "tracingX":old_data["tracingX"][-5:],
           "tracingY":[
@@ -86,12 +88,28 @@ def update_cognitive():
               "data":old_data["cognitiveLevel"]["Engagement"][-5:]
             },
             {
-              "name":"Openness",
-              "data":old_data["cognitiveLevel"]["Openness"][-5:]
+              "name":"Joy",
+              "data":old_data["cognitiveLevel"]["Joy"][-5:]
             },
             {
-              "name":"Neuroticism",
-              "data":old_data["cognitiveLevel"]["Neuroticism"][-5:]
+              "name":"Trust",
+              "data":old_data["cognitiveLevel"]["Trust"][-5:]
+            },
+            {
+              "name":"Fear",
+              "data":old_data["cognitiveLevel"]["Fear"][-5:]
+            },
+            {
+              "name":"Surprise",
+              "data":old_data["cognitiveLevel"]["Surprise"][-5:]
+            },
+            {
+              "name":"Anger",
+              "data":old_data["cognitiveLevel"]["Anger"][-5:]
+            },
+            {
+              "name":"Disgust",
+              "data":old_data["cognitiveLevel"]["Disgust"][-5:]
             }
           ]
         }
@@ -108,11 +126,12 @@ def get_cognitive():
         old_data = json.load(file)
         res = {
           "cognitive_level":[
-            old_data["cognitiveLevel"]["Openness"][-1],
-            old_data["cognitiveLevel"]["Conscientiousness"][-1],
-            old_data["cognitiveLevel"]["Extraversion"][-1],
-            old_data["cognitiveLevel"]["Agreeableness"][-1],
-            old_data["cognitiveLevel"]["Neuroticism"][-1]
+            old_data["cognitiveLevel"]["Joy"][-1],
+            old_data["cognitiveLevel"]["Trust"][-1],
+            old_data["cognitiveLevel"]["Fear"][-1],
+            old_data["cognitiveLevel"]["Surprise"][-1],
+            old_data["cognitiveLevel"]["Anger"][-1],
+            old_data["cognitiveLevel"]["Disgust"][-1]
           ],
           "tracingX":old_data["tracingX"][-5:],
           "tracingY":[
@@ -121,12 +140,28 @@ def get_cognitive():
               "data":old_data["cognitiveLevel"]["Engagement"][-5:]
             },
             {
-              "name":"Openness",
-              "data":old_data["cognitiveLevel"]["Openness"][-5:]
+              "name":"Joy",
+              "data":old_data["cognitiveLevel"]["Joy"][-5:]
             },
             {
-              "name":"Neuroticism",
-              "data":old_data["cognitiveLevel"]["Neuroticism"][-5:]
+              "name":"Trust",
+              "data":old_data["cognitiveLevel"]["Trust"][-5:]
+            },
+            {
+              "name":"Fear",
+              "data":old_data["cognitiveLevel"]["Fear"][-5:]
+            },
+            {
+              "name":"Surprise",
+              "data":old_data["cognitiveLevel"]["Surprise"][-5:]
+            },
+            {
+              "name":"Anger",
+              "data":old_data["cognitiveLevel"]["Anger"][-5:]
+            },
+            {
+              "name":"Disgust",
+              "data":old_data["cognitiveLevel"]["Disgust"][-5:]
             }
           ]
         }

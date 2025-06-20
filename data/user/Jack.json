@@ -3,12 +3,27 @@
   "userName": "Jack",
   "userAvatar": "/src/assets/Jack.JPG",
   "cognitiveLevel": {
-    "Openness": [],
-    "Conscientiousness": [],
-    "Extraversion": [],
-    "Agreeableness": [],
-    "Neuroticism": [],
-    "Engagement": []
+    "Joy": [
+
+    ],
+    "Trust": [
+      
+    ],
+    "Fear": [
+
+    ],
+    "Surprise": [
+
+    ],
+    "Anger": [
+
+    ],
+    "Disgust": [
+
+    ],
+    "Engagement": [
+
+    ]
   },
   "tracingX":[]
 }
