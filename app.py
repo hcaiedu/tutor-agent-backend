@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, current_app
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
 from threading import Lock
 from threading import Thread
@@ -13,291 +13,471 @@ import random
 import random
 import string
 import time
+from database import connect_database
+from bson import ObjectId
 
 app = Flask(__name__)
 CORS(app)
-app.config['SECRET_KEY'] = 'secret!'
+app.config["SECRET_KEY"] = "secret!"
 socketio = SocketIO(app, cors_allowed_origins="*")
 lock = Lock()
 
+# database connection
+app.user_collection, app.room_collection = connect_database()
+
 room_counters = {}
+
 
 def generate_random_string(length):
     # 定义字符集合，包括大小写字母和数字
     characters = string.ascii_letters + string.digits
     # 从字符集合中随机选择指定数量的字符
-    return ''.join(random.choices(characters, k=length))
-
-def save_message_to_json(data):
-  JSON_FILE = 'data/room/' + data["roomId"] + '.json'
-  with open(JSON_FILE, "r") as file:
-    old_data = json.load(file)
-    if "history" not in old_data or not isinstance(old_data["history"], list):
-      old_data["history"] = []
-    old_data["history"].append(data)
-    with open(JSON_FILE, 'w') as f:
-      json.dump(old_data, f, ensure_ascii=False, indent=2) 
+    return "".join(random.choices(characters, k=length))
 
 
 @app.route("/")
 def home():
     return "Welcome to the Flask Backend!"
 
-# get user info
-@app.route("/user/get_user_info", methods=["OPTIONS","GET"])
-def get_user_info():
-  JSON_FILE = 'data/user/' + request.args.get('userName') + '.json'
-  if os.path.exists(JSON_FILE):
-    with open(JSON_FILE, "r") as file:
-        data = json.load(file)
-    return jsonify(data), 200
-  else:
-    return jsonify({"error": "User not found"}), 404
-  
-# update user cogitive
-@app.route("/user/update_cognitive", methods=["OPTIONS","get"])
-def update_cognitive():
+
+# register
+@app.route("/user/register", methods=["POST"])
+def register():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid data"}), 400
     try:
-      JSON_FILE = 'data/user/' + request.args.get('userName') + '.json'
-      with open(JSON_FILE, "r") as file:
-        old_data = json.load(file)
-        old_data["cognitiveLevel"]["Joy"].append(round(random.random(),2))
-        old_data["cognitiveLevel"]["Trust"].append(round(random.random(),2))
-        old_data["cognitiveLevel"]["Fear"].append(round(random.random(),2))
-        old_data["cognitiveLevel"]["Surprise"].append(round(random.random(),2))
-        old_data["cognitiveLevel"]["Anger"].append(round(random.random(),2))
-        old_data["cognitiveLevel"]["Disgust"].append(round(random.random(),2))
-        old_data["cognitiveLevel"]["Engagement"].append(round(random.random(),2))
-        old_data["tracingX"].append(datetime.now().strftime("%I:%M:%S %p"))
-        # 4. 将更新后的数据写回文件
-        with open(JSON_FILE, 'w') as f:
-            json.dump(old_data, f, ensure_ascii=False, indent=2)
-        res = {
-          "cognitive_level":[
-            old_data["cognitiveLevel"]["Joy"][-1],
-            old_data["cognitiveLevel"]["Trust"][-1],
-            old_data["cognitiveLevel"]["Fear"][-1],
-            old_data["cognitiveLevel"]["Surprise"][-1],
-            old_data["cognitiveLevel"]["Anger"][-1],
-            old_data["cognitiveLevel"]["Disgust"][-1]
-          ],
-          "tracingX":old_data["tracingX"][-5:],
-          "tracingY":[
-            {
-              "name":"Engagement",
-              "data":old_data["cognitiveLevel"]["Engagement"][-5:]
+        image_paths = [
+            "/src/assets/Bob.JPG",
+            "/src/assets/ALice.JPG",
+            "/src/assets/Jim.JPG",
+            "/src/assets/Jack.JPG",
+            "/src/assets/David.JPG",
+        ]
+        userAvatar = random.chocie(image_paths)
+        user_info = {
+            "userName": data["userName"],
+            "userPswd": data["userPswd"],
+            "mode": data["mode"],
+            "userAvatar": userAvatar,
+            "cognitiveLevel": {
+                "Joy": [0],
+                "Trust": [0],
+                "Fear": [0],
+                "Surprise": [0],
+                "Anger": [0],
+                "Disgust": [0],
+                "Engagement": [0],
             },
+            "tracingX": [0],
+            "profile":{},
+            "roomList": []
+        }
+        result = current_app.user_collection.insert_one(user_info)
+        return (
+            jsonify(
+                {
+                    "status": "success",
+                    "userId": str(result.inserted_id),
+                    "mode": data["mode"],
+                }
+            ),
+            201,
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# login
+@app.route("/user/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid data"}), 400
+    try:
+        users = list(current_app.user_collection.find({"userName": data["userName"]}))
+        if len(users) <= 0:
+            return jsonify({"error": "User does not exist!"}), 500
+        else:
+            for user in users:
+                if user["userPswd"] == data["userPswd"]:
+                    return (
+                        jsonify(
+                            {
+                                "status": "success",
+                                "userId": str(user["_id"]),
+                                "mode": user["mode"],
+                            }
+                        ),
+                        200,
+                    )
+            return jsonify({"error": "wrong password"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# get user info
+@app.route("/user/get_user_info", methods=["OPTIONS", "GET"])
+def get_user_info():
+    userId = request.args.get("userId")
+    try:
+        user_query_result = current_app.user_collection.find_one(
+            {"_id": ObjectId(userId)}
+        )
+        roomList = user_query_result["roomList"]
+        userName = user_query_result["userName"]
+        userAvatar = user_query_result["userAvatar"]
+        return jsonify(
             {
-              "name":"Joy",
-              "data":old_data["cognitiveLevel"]["Joy"][-5:]
-            },
-            {
-              "name":"Trust",
-              "data":old_data["cognitiveLevel"]["Trust"][-5:]
-            },
-            {
-              "name":"Fear",
-              "data":old_data["cognitiveLevel"]["Fear"][-5:]
-            },
-            {
-              "name":"Surprise",
-              "data":old_data["cognitiveLevel"]["Surprise"][-5:]
-            },
-            {
-              "name":"Anger",
-              "data":old_data["cognitiveLevel"]["Anger"][-5:]
-            },
-            {
-              "name":"Disgust",
-              "data":old_data["cognitiveLevel"]["Disgust"][-5:]
+                "userId": userId,
+                "userName": userName,
+                "userAvatar": userAvatar,
+                "roomList": roomList,
             }
-          ]
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# update user cogitive
+@app.route("/user/update_cognitive", methods=["OPTIONS", "get"])
+def update_cognitive():
+    userId = request.args.get("userId")
+    try:
+        update_query = {
+            "$push": {
+                "cognitiveLevel.Joy": round(random.random(), 2),
+                "cognitiveLevel.Trust": round(random.random(), 2),
+                "cognitiveLevel.Fear": round(random.random(), 2),
+                "cognitiveLevel.Surprise": round(random.random(), 2),
+                "cognitiveLevel.Anger": round(random.random(), 2),
+                "cognitiveLevel.Disgust": round(random.random(), 2),
+                "cognitiveLevel.Engagement": round(random.random(), 2),
+                "tracingX": datetime.now().strftime("%I:%M:%S %p"),
+            }
+        }
+        user_update_result = current_app.user_collection.update_one(
+            {"_id": ObjectId(userId)}, update_query
+        )
+        try:
+            user_query_result = current_app.user_collection.find_one(
+                {"_id": ObjectId(userId)}
+            )
+            res = {
+                "cognitive_level": [
+                    user_query_result["cognitiveLevel"]["Joy"][-1],
+                    user_query_result["cognitiveLevel"]["Trust"][-1],
+                    user_query_result["cognitiveLevel"]["Fear"][-1],
+                    user_query_result["cognitiveLevel"]["Surprise"][-1],
+                    user_query_result["cognitiveLevel"]["Anger"][-1],
+                    user_query_result["cognitiveLevel"]["Disgust"][-1],
+                ],
+                "tracingX": user_query_result["tracingX"][-5:],
+                "tracingY": [
+                    {
+                        "name": "Engagement",
+                        "data": user_query_result["cognitiveLevel"]["Engagement"][-5:],
+                    },
+                    {
+                        "name": "Joy",
+                        "data": user_query_result["cognitiveLevel"]["Joy"][-5:],
+                    },
+                    {
+                        "name": "Trust",
+                        "data": user_query_result["cognitiveLevel"]["Trust"][-5:],
+                    },
+                    {
+                        "name": "Fear",
+                        "data": user_query_result["cognitiveLevel"]["Fear"][-5:],
+                    },
+                    {
+                        "name": "Surprise",
+                        "data": user_query_result["cognitiveLevel"]["Surprise"][-5:],
+                    },
+                    {
+                        "name": "Anger",
+                        "data": user_query_result["cognitiveLevel"]["Anger"][-5:],
+                    },
+                    {
+                        "name": "Disgust",
+                        "data": user_query_result["cognitiveLevel"]["Disgust"][-5:],
+                    },
+                ],
+            }
+            return jsonify(res), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# get user cognitive
+@app.route("/user/get_cognitive", methods=["OPTIONS", "get"])
+def get_cognitive():
+    userId = request.args.get("userId")
+    try:
+        user_query_result = current_app.user_collection.find_one(
+            {"_id": ObjectId(userId)}
+        )
+        res = {
+            "cognitive_level": [
+                user_query_result["cognitiveLevel"]["Joy"][-1],
+                user_query_result["cognitiveLevel"]["Trust"][-1],
+                user_query_result["cognitiveLevel"]["Fear"][-1],
+                user_query_result["cognitiveLevel"]["Surprise"][-1],
+                user_query_result["cognitiveLevel"]["Anger"][-1],
+                user_query_result["cognitiveLevel"]["Disgust"][-1],
+            ],
+            "tracingX": user_query_result["tracingX"][-5:],
+            "tracingY": [
+                {
+                    "name": "Engagement",
+                    "data": user_query_result["cognitiveLevel"]["Engagement"][-5:],
+                },
+                {
+                    "name": "Joy",
+                    "data": user_query_result["cognitiveLevel"]["Joy"][-5:],
+                },
+                {
+                    "name": "Trust",
+                    "data": user_query_result["cognitiveLevel"]["Trust"][-5:],
+                },
+                {
+                    "name": "Fear",
+                    "data": user_query_result["cognitiveLevel"]["Fear"][-5:],
+                },
+                {
+                    "name": "Surprise",
+                    "data": user_query_result["cognitiveLevel"]["Surprise"][-5:],
+                },
+                {
+                    "name": "Anger",
+                    "data": user_query_result["cognitiveLevel"]["Anger"][-5:],
+                },
+                {
+                    "name": "Disgust",
+                    "data": user_query_result["cognitiveLevel"]["Disgust"][-5:],
+                },
+            ],
         }
         return jsonify(res), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# get user cognitive
-@app.route("/user/get_cognitive", methods=["OPTIONS","get"])
-def get_cognitive():
+
+# get room info
+@app.route("/room/get_room_info", methods=["OPTIONS", "GET"])
+def get_room_info():
+    room_id = request.args.get("roomId")
     try:
-      JSON_FILE = 'data/user/' + request.args.get('userName') + '.json'
-      with open(JSON_FILE, "r") as file:
-        old_data = json.load(file)
-        res = {
-          "cognitive_level":[
-            old_data["cognitiveLevel"]["Joy"][-1],
-            old_data["cognitiveLevel"]["Trust"][-1],
-            old_data["cognitiveLevel"]["Fear"][-1],
-            old_data["cognitiveLevel"]["Surprise"][-1],
-            old_data["cognitiveLevel"]["Anger"][-1],
-            old_data["cognitiveLevel"]["Disgust"][-1]
-          ],
-          "tracingX":old_data["tracingX"][-5:],
-          "tracingY":[
-            {
-              "name":"Engagement",
-              "data":old_data["cognitiveLevel"]["Engagement"][-5:]
-            },
-            {
-              "name":"Joy",
-              "data":old_data["cognitiveLevel"]["Joy"][-5:]
-            },
-            {
-              "name":"Trust",
-              "data":old_data["cognitiveLevel"]["Trust"][-5:]
-            },
-            {
-              "name":"Fear",
-              "data":old_data["cognitiveLevel"]["Fear"][-5:]
-            },
-            {
-              "name":"Surprise",
-              "data":old_data["cognitiveLevel"]["Surprise"][-5:]
-            },
-            {
-              "name":"Anger",
-              "data":old_data["cognitiveLevel"]["Anger"][-5:]
-            },
-            {
-              "name":"Disgust",
-              "data":old_data["cognitiveLevel"]["Disgust"][-5:]
-            }
-          ]
-        }
-        return jsonify(res), 200
+        room_query_result = current_app.room_collection.find_one(
+            {"_id": ObjectId(room_id)}
+        )
+        room_query_result["_id"] = str(room_query_result["_id"])
+        return jsonify(room_query_result), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-  
-# get room info
-@app.route("/room/get_room_info", methods=["OPTIONS","GET"])
-def get_room_info():
-  JSON_FILE = 'data/room/' + request.args.get('roomId') + '.json'
-  print(JSON_FILE)
-  if os.path.exists(JSON_FILE):
-    with open(JSON_FILE, "r") as file:
-        data = json.load(file)
-    return jsonify(data), 200
-  else:
-    return jsonify({"error": "User not found"}), 404
-  
-# create room
+
+
 @app.route("/room/create_room", methods=["POST"])
 def create_room():
-  data = request.get_json()
-  if not data:
-    return jsonify({"error": "Invalid data"}), 400
-  try:
-    roomId = generate_random_string(6)
-    JSON_FILE = 'data/room/' + roomId + '.json'
-    # if os.path.exists(JSON_FILE):
-    #   return jsonify({"error": "Room is already exist"}), 200
-    
-    with open(JSON_FILE, "w") as file:
-      new_json = {
-        'roomId': roomId,
-        'roomName': data['roomName'],
-        'roomCustomName': data['roomCustomName'],
-        'memberNum': data['memberNum'],
-        'chatTime': data['chatTime'],
-        'assertiveness': data['assertiveness'],
-        'topic': data['topic'],
-        'roomMember': [],
-        'history': [
-          {
-            "userId":"u000",
-            "userName":"Agent",
-            "userAvatar":"/src/assets/Agent.PNG",
-            "text":"Welcome everyone to today’s discussion. The topic we are discussing is '" + data['topic'] + "'Feel free to share your thoughts!",
-            "time": datetime.now().strftime("%I:%M:%S %p"),
-            "roomId": roomId
-          }
-        ]
-      }
-      json.dump(new_json, file, indent=2)
-    return jsonify(new_json), 200
-  except Exception as e:
-    return jsonify({"error": str(e)}), 500
-  
+    REQUIRED_FIELDS = ["roomName", "memberNum", "chatTime", "topic"]
+
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid data"}), 400
+
+    # 验证必需字段
+    missing = [field for field in REQUIRED_FIELDS if field not in data]
+    if missing:
+        return jsonify({"error": f"Missing fields: {', '.join(missing)}"}), 400
+
+    try:
+        current_time = datetime.now()
+        room_info = {
+            # 从data中获取的字段
+            "roomName": data["roomName"],
+            "roomCustomName": data.get("roomCustomName", ""),
+            "memberNum": data["memberNum"],
+            "chatTime": data["chatTime"],
+            "assertiveness": data.get("assertiveness", 0.5),
+            "topic": data["topic"],
+            # 系统生成的字段
+            "stage_id": "stage1",
+            "start_i": 0,
+            "roomMember": [],
+            "history": [
+                {
+                    "date": current_time.strftime("%Y/%m/%d"),
+                    "time": current_time.strftime("%H:%M:%S"),
+                    "role_id": "T",
+                    "name": "teacher",
+                    "response": f'Welcome! Today\'s topic is "{data["topic"]}".The entire discussion process should try to follow the five stages of problem definition, exploration, integration, resolution and feedback. Please brainstorm and express your opinions!',
+                }
+            ],
+        }
+
+        # 插入数据库
+        result = current_app.room_collection.insert_one(room_info)
+
+        return (
+            jsonify(
+                {
+                    "status": "success",
+                    "roomId": str(result.inserted_id),
+                    "roomName": room_info["roomName"],
+                }
+            ),
+            201,
+        )  # 使用201 Created状态码
+
+    except Exception as e:
+        app.logger.error(f"Room creation failed: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
+
+
 # join room
 @app.route("/room/join_room", methods=["POST"])
 def join_room_method():
-  data = request.get_json()
-  if not data:
-    return jsonify({"error": "Invalid data"}), 400
-  try:
-    JSON_FILE = 'data/room/' +data['roomId'] + '.json'
-    if os.path.exists(JSON_FILE):
-      with open(JSON_FILE, "r") as file:
-        old_data = json.load(file)
-      roomMember = old_data['roomMember']
-      for item in roomMember:
-        if item['memberName'] == data['userName']:
-          return jsonify({'success':'success'}), 200
-      new_member = {
-        "memberId": generate_random_string(4),
-        "memberName": data["userName"],
-        "memberAvatar": "/src/assets/"+data["userName"]+".JPG"
-      }
-      old_data['roomMember'].append(new_member)
-      with open(JSON_FILE, 'w') as f:
-        json.dump(old_data, f, ensure_ascii=False, indent=2)
-      return jsonify({'success':'success'}), 200
-    else:
-      return jsonify({"error": "Room is not exist"}), 200
-  except Exception as e:
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid data"}), 400
+    try:
+        # JSON_FILE = "data/room/" + data["roomId"] + ".json"
+        roomId = data["roomId"]
+        userId = data["userId"]
+        userName = data["userName"]
+        userAvatar = data["userAvatar"]
+        # query room member
+        room_query_result = current_app.room_collection.find_one(
+            {"_id": ObjectId(roomId)}
+        )
+        for member in room_query_result["roomMember"]:
+            if member["memberId"] == userId:
+                return (
+                    jsonify(
+                        {
+                            "status": "success",
+                            "roomId": roomId,
+                            "userId": userId,
+                            "userName": userName,
+                        }
+                    ),
+                    200,
+                )
+        room_member_item = {
+            "memberId": userId,
+            "memberName": userName,
+            "memberAvatar": userAvatar,
+        }
+        try:
+            room_update_result = current_app.room_collection.update_one(
+                {"_id": ObjectId(roomId)},
+                {"$push": {"roomMember": room_member_item}},
+            )
+            user_update_result = current_app.user_collection.update_one(
+                {"_id": ObjectId(userId)},
+                {
+                    "$push": {
+                        "roomList": {
+                            "roomId": roomId,
+                            "roomName": room_query_result["roomName"],
+                        }
+                    }
+                },
+            )
+            return (
+                jsonify(
+                    {
+                        "status": "success",
+                        "roomId": roomId,
+                        "userId": userId,
+                        "userName": userName,
+                    }
+                ),
+                200,
+            )
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+    except Exception as e:
         return jsonify({"error": str(e)}), 500
-      
+
+
 # 处理连接事件
-@socketio.on('connect')
+@socketio.on("connect")
 def handle_connect():
-    print('A client connected.')
+    print("A client connected.")
+
 
 # 处理断开连接
-@socketio.on('disconnect')
+@socketio.on("disconnect")
 def handle_disconnect():
-    print('A client disconnected.')
-    
-@socketio.on('join')
+    print("A client disconnected.")
+
+
+@socketio.on("join")
 def handle_join(data):
     print(data)
-    roomId = data['roomId']
+    roomId = data["roomId"]
     join_room(roomId)
     print(f"User {data['userName']} joined room {roomId}")
 
+
 # 接收消息并广播
-@socketio.on('send_message')
+@socketio.on("send_message")
 def handle_message(data):
     roomId = data["roomId"]
-    emit('receive_message', data['message'], room=roomId)
-    with lock:
-      print(roomId)
-      if roomId not in room_counters:
-        room_counters[roomId] = 0
-      save_message_to_json(data['message'])
-      room_counters[roomId] += 1
-      if room_counters[roomId] >= 4:
-        send_system_message(roomId)
-        
-def send_system_message(roomId):
-  # query llm api
-  result= query_api(roomId)
-  JSON_FILE = f'data/room/{roomId}.json'
-  with open(JSON_FILE, "r") as file:
-    old_data = json.load(file)
-    msg = {
-      "userId": "u000",
-      "userName": "Agent",
-      "userAvatar": "/src/assets/Agent.PNG",
-      "text": result["response_content"],
-      "time": datetime.now().strftime("%I:%M:%S %p"),
-      "roomId": roomId
+    message = data["message"]
+    history_item = {
+        "date": message["date"],
+        "time": message["time"],
+        "userId": message["userId"],
+        "userName": message["userName"],
+        "userAvatar": message["userAvatar"],
+        "received_information": "",
+        "response": message["response"],
+        "self-regulation": "",
+        "reason for self-regulation": "",
+        "co-regulation": "",
+        "reason for co-regulation": "",
+        "student_response_raw": "",
     }
-    old_data["history"].append(msg)
-    with open(JSON_FILE, 'w') as f:
-      json.dump(old_data, f, ensure_ascii=False, indent=2)
-    emit('receive_message', msg, room=roomId)
-    room_counters[roomId] = 0
+    append_result = current_app.room_collection.update_one(
+    {"_id": ObjectId(roomId)}, {"$push": {"history": history_item}}
+    )
+    emit("receive_message", data["message"], room=roomId)
+# with lock:
+#     print(roomId)
+#     if roomId not in room_counters:
+#         room_counters[roomId] = 0
+#     save_message_to_json(data["message"])
+#     room_counters[roomId] += 1
+#     if room_counters[roomId] >= 4:
+#         send_system_message(roomId)
+# send_system_message(roomId)
+
+
+def send_system_message(roomId):
+    # query llm api
+    result = query_api(roomId)
+    JSON_FILE = f"data/room/{roomId}.json"
+    with open(JSON_FILE, "r") as file:
+        old_data = json.load(file)
+        msg = {
+            "userId": "u000",
+            "userName": "Agent",
+            "userAvatar": "/src/assets/Agent.PNG",
+            "text": result["response_content"],
+            "time": datetime.now().strftime("%I:%M:%S %p"),
+            "roomId": roomId,
+        }
+        old_data["history"].append(msg)
+        with open(JSON_FILE, "w") as f:
+            json.dump(old_data, f, ensure_ascii=False, indent=2)
+        emit("receive_message", msg, room=roomId)
+        room_counters[roomId] = 0
+
 
 if __name__ == "__main__":
-  socketio.run(app, host="0.0.0.0", port=5001, debug=True)
+    socketio.run(app, host="0.0.0.0", port=5001, debug=True)
