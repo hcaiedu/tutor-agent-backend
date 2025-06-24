@@ -15,6 +15,7 @@ import string
 import time
 from database import connect_database
 from bson import ObjectId
+from agent_utils import get_student_agent_response, get_teacher_response
 
 app = Flask(__name__)
 CORS(app)
@@ -26,6 +27,18 @@ lock = Lock()
 app.user_collection, app.room_collection = connect_database()
 
 room_counters = {}
+
+# agent related
+client = OpenAI(
+    base_url="https://aihubmix.com/v1",
+    api_key="sk-4CFE7AOiCwVbiRXw65A86b969f204a98B4Dd5bB0D97c9b70",
+)
+# client = OpenAI(
+#     api_key="gpustack_dca95d48986a6f0c_b597d9343202a28c4d57a14026631130",
+#     base_url="http://159.223.84.150:9000/v1"
+# )
+model_name = "aihubmix-Llama-3-1-70B-Instruct"
+# model_name = "llama3-70b-instruct-fp16"
 
 
 def generate_random_string(length):
@@ -70,8 +83,8 @@ def register():
                 "Engagement": [0],
             },
             "tracingX": [0],
-            "profile":{},
-            "roomList": []
+            "profile": {},
+            "roomList": [],
         }
         result = current_app.user_collection.insert_one(user_info)
         return (
@@ -336,6 +349,37 @@ def create_room():
         return jsonify({"error": "Internal server error"}), 500
 
 
+@app.route("/room/get_agent_message", methods=["POST"])
+def get_agent_message():
+    data = request.get_json()
+    try:
+        room_info = current_app.room_collection.find_one(
+            {"_id": ObjectId(data["room_id"])}
+        )
+        user_info = current_app.user_collection.find_one(
+            {"_id": ObjectId(data["user_id"])}
+        )
+        status, student_response_json = get_student_agent_response(
+            client, user_info, room_info, model_name, cut_word_length=18000
+        )
+        if status == "success":
+            return student_response_json, 200
+        elif "status" == "role_error":
+            # add error student to student_errors
+            try:
+                room_update_result = current_app.room_collection.update_one(
+                    {"_id": ObjectId(data["room_id"])},
+                    {"$push": {"student_errors": student_response_json}},
+                )
+                return jsonify({"error": "AI agent cannot work now!"}), 500
+            except Exception as e:
+                return jsonify({"error": str(e)}), 500
+        else:
+            return jsonify({"error": "system error"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 # join room
 @app.route("/room/join_room", methods=["POST"])
 def join_room_method():
@@ -427,56 +471,42 @@ def handle_join(data):
 # 接收消息并广播
 @socketio.on("send_message")
 def handle_message(data):
+    userName = data["userName"]
     roomId = data["roomId"]
     message = data["message"]
-    history_item = {
-        "date": message["date"],
-        "time": message["time"],
-        "userId": message["userId"],
-        "userName": message["userName"],
-        "userAvatar": message["userAvatar"],
-        "received_information": "",
-        "response": message["response"],
-        "self-regulation": "",
-        "reason for self-regulation": "",
-        "co-regulation": "",
-        "reason for co-regulation": "",
-        "student_response_raw": "",
-    }
-    append_result = current_app.room_collection.update_one(
-    {"_id": ObjectId(roomId)}, {"$push": {"history": history_item}}
-    )
-    emit("receive_message", data["message"], room=roomId)
-# with lock:
-#     print(roomId)
-#     if roomId not in room_counters:
-#         room_counters[roomId] = 0
-#     save_message_to_json(data["message"])
-#     room_counters[roomId] += 1
-#     if room_counters[roomId] >= 4:
-#         send_system_message(roomId)
-# send_system_message(roomId)
-
-
-def send_system_message(roomId):
-    # query llm api
-    result = query_api(roomId)
-    JSON_FILE = f"data/room/{roomId}.json"
-    with open(JSON_FILE, "r") as file:
-        old_data = json.load(file)
-        msg = {
-            "userId": "u000",
-            "userName": "Agent",
-            "userAvatar": "/src/assets/Agent.PNG",
-            "text": result["response_content"],
-            "time": datetime.now().strftime("%I:%M:%S %p"),
-            "roomId": roomId,
-        }
-        old_data["history"].append(msg)
-        with open(JSON_FILE, "w") as f:
-            json.dump(old_data, f, ensure_ascii=False, indent=2)
-        emit("receive_message", msg, room=roomId)
-        room_counters[roomId] = 0
+    # history_item = {
+    #     "date": message["date"],
+    #     "time": message["time"],
+    #     "userId": message["userId"],
+    #     "userName": message["userName"],
+    #     "userAvatar": message["userAvatar"],
+    #     "received_information": "",
+    #     "response": message["response"],
+    #     "self-regulation": "",
+    #     "reason for self-regulation": "",
+    #     "co-regulation": "",
+    #     "reason for co-regulation": "",
+    #     "student_response_raw": "",
+    # }
+    with lock:
+        emit("receive_message", data["message"], room=roomId)
+        room_info = current_app.room_collection.find_one({"_id": ObjectId(roomId)})
+        room_info["_id"] = str(room_info["_id"])
+        status, teacher_res = get_teacher_response(
+            client, userName, message, room_info, model_name, cut_word_length=18000
+        )
+        if status == "intervention_no":
+            append_result_student = current_app.room_collection.update_one(
+                {"_id": ObjectId(roomId)}, {"$push": {"history": teacher_res}}
+            )
+        else:
+            append_result_student = current_app.room_collection.update_one(
+                {"_id": ObjectId(roomId)}, {"$push": {"history": message}}
+            )
+            append_result_teacher = current_app.room_collection.update_one(
+                {"_id": ObjectId(roomId)}, {"$push": {"history": teacher_res}}
+            )
+            emit("receive_message", teacher_res, room=roomId)
 
 
 if __name__ == "__main__":
