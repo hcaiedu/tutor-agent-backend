@@ -29,16 +29,17 @@ app.user_collection, app.room_collection = connect_database()
 room_counters = {}
 
 # agent related
-client = OpenAI(
-    base_url="https://aihubmix.com/v1",
-    api_key="sk-4CFE7AOiCwVbiRXw65A86b969f204a98B4Dd5bB0D97c9b70",
+student_client = OpenAI(
+    api_key="gpustack_dca95d48986a6f0c_b597d9343202a28c4d57a14026631130",
+    base_url="http://159.223.84.150:9000/v1"
 )
-# client = OpenAI(
-#     api_key="gpustack_dca95d48986a6f0c_b597d9343202a28c4d57a14026631130",
-#     base_url="http://159.223.84.150:9000/v1"
-# )
-model_name = "aihubmix-Llama-3-1-70B-Instruct"
-# model_name = "llama3-70b-instruct-fp16"
+student_model_name = "llama3-70b-instruct-fp16"
+
+teacher_client = client = OpenAI(
+    base_url="http://localhost:11434/v1",
+    api_key="ollama"
+)
+teacher_model_name = "QIHAO-8B"
 
 
 def generate_random_string(length):
@@ -360,7 +361,7 @@ def get_agent_message():
             {"_id": ObjectId(data["user_id"])}
         )
         status, student_response_json = get_student_agent_response(
-            client, user_info, room_info, model_name, cut_word_length=18000
+            student_client, user_info, room_info, student_model_name, cut_word_length=18000
         )
         if status == "success":
             return student_response_json, 200
@@ -474,35 +475,22 @@ def handle_message(data):
     userName = data["userName"]
     roomId = data["roomId"]
     message = data["message"]
-    # history_item = {
-    #     "date": message["date"],
-    #     "time": message["time"],
-    #     "userId": message["userId"],
-    #     "userName": message["userName"],
-    #     "userAvatar": message["userAvatar"],
-    #     "received_information": "",
-    #     "response": message["response"],
-    #     "self-regulation": "",
-    #     "reason for self-regulation": "",
-    #     "co-regulation": "",
-    #     "reason for co-regulation": "",
-    #     "student_response_raw": "",
-    # }
     with lock:
-        emit("receive_message", data["message"], room=roomId)
         room_info = current_app.room_collection.find_one({"_id": ObjectId(roomId)})
         room_info["_id"] = str(room_info["_id"])
         status, teacher_res = get_teacher_response(
-            client, userName, message, room_info, model_name, cut_word_length=18000
+            teacher_client, userName, message, room_info, teacher_model_name, cut_word_length=18000
         )
         if status == "intervention_no":
             append_result_student = current_app.room_collection.update_one(
                 {"_id": ObjectId(roomId)}, {"$push": {"history": teacher_res}}
             )
+            emit("receive_message", data["message"], room=roomId)
         else:
             append_result_student = current_app.room_collection.update_one(
                 {"_id": ObjectId(roomId)}, {"$push": {"history": message}}
             )
+            emit("receive_message", data["message"], room=roomId)
             append_result_teacher = current_app.room_collection.update_one(
                 {"_id": ObjectId(roomId)}, {"$push": {"history": teacher_res}}
             )

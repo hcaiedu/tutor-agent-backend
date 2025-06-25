@@ -11,7 +11,6 @@
 import os
 import pandas as pd
 import random
-from termcolor import colored
 from tqdm import tqdm
 import docx
 from datetime import datetime
@@ -694,7 +693,7 @@ def get_teacher_response(
         stage_result_json, stage_raw, return_flag = teacher_calling(
             teacher_agent["client"], stage_prompt, model_name, mode="stage", time=0
         )
-        stage_id = detect_stage(stage_result_json["identified stage"], stage_id=stage_id)
+        stage_id = detect_stage(stage_result_json["identified stage"], stage_id=room_info["stage_id"])
         guidance_prompt = set_teacher_prompt(
             student_name,
             student_response_json,
@@ -716,9 +715,9 @@ def get_teacher_response(
         history_item = {
             "date": formatted_date,
             "time": formatted_time,
-            "userId": "T",
+            "userId": "U001",
             "userName": "teacher",
-            "userAvatar": "../assets/Agent.PNG",
+            "userAvatar": "/src/assets/Agent.PNG",
             "received_information": "",
             "response": guidance_result_json["guidance"],
             "intervention": intervention_result_json["intervention"],
