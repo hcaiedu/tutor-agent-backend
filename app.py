@@ -68,7 +68,7 @@ def register():
             "/src/assets/Jack.JPG",
             "/src/assets/David.JPG",
         ]
-        userAvatar = random.chocie(image_paths)
+        userAvatar = random.choice(image_paths)
         user_info = {
             "userName": data["userName"],
             "userPswd": data["userPswd"],
