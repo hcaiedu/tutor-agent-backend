@@ -1,23 +1,7 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-"""
-@filename: agent_utils.py
-@description:
-@time: 2025/06/24
-@author: Haoli WANG
-@Version: 1.0
-"""
-
 import os
-import pandas as pd
-import random
-from tqdm import tqdm
 import docx
 from datetime import datetime
-from transformers.utils.versions import require_version
-from openai import OpenAI
-from prompt_utils import extract_fn, verify_fn, fix_guidance
-from flask import jsonify
+from prompt_utils import verify_fn
 
 
 def validate_stage(identified_stage):
@@ -221,23 +205,6 @@ def construct_student_prompt(
 
 
 def set_student_agent(client, studentInfo, roomInfo, cut_word_length):
-    """
-    Description:
-        set student agent
-    Parameters:
-        client(Obj): client created by OpenAI mode
-        studentInfo(dict): student info (id and name)
-        roomInfo(dict): room info
-        start_i(int): Determine the position from which the agent should start reviewing historical conversations
-        welcome_words(str): words used at the beginning of discussion
-        cut_word_length(int): max length of the prompt
-        user_collection(mondodb collection): the user collection, use to get more student info
-    Returns:
-        student_agent(Obj): the constructed student agent
-        new_start_i(int): new start postion flag
-    Outputs:
-        output1(type): desc
-    """
     # get prompt
     student_prompt, new_start_i = construct_student_prompt(
         studentInfo["userName"],
@@ -319,16 +286,6 @@ def student_calling(student_agent, model_name, mode="student", time=0):
 def get_student_agent_response(
     client,studentInfo, roomInfo, model_name, cut_word_length=18000
 ):
-    """
-    Description:
-
-    Parameters:
-      param1(type): desc
-    Returns:
-      return1(type): desc
-    Outputs:
-      output1(type): desc
-    """
     # set student agent
     student_agent, start_i = set_student_agent(client, studentInfo, roomInfo, cut_word_length)
     try:
@@ -564,18 +521,6 @@ def teacher_calling(teacher_client, content, model_name, mode="teacher", time=0)
     return result_verified, result_raw, return_flag
   
 def get_prompt():
-    """
-    Description:
-        Function used to get the teacher prompts
-    Parameters:
-        None
-    Returns:
-        intervention_prompt(str): consturcted intervention prompt
-        stage_prompt(str): consturcted stage prompt
-        issue_prompts(dict): consturcted issue prompts
-    Outputs:
-        None
-    """
     intervention_path = "prompts/teacher_prompts/intervention prompt.docx"
     file = docx.Document(intervention_path)
     texts = []
@@ -606,16 +551,6 @@ def get_prompt():
 
 
 def set_teacher(client):
-    """
-    Description:
-        set teacher agent
-    Parameters:
-        client(Obj): client created by OpenAI mode
-    Returns:
-        teacher_agent(Obj): and object which contains one openai mode client and three teacher prompts
-    Outputs:
-        None
-    """
     intervention_prompt, stage_prompt, issue_prompts = get_prompt()
     teacher_agent = {
         "client": client,
@@ -654,16 +589,6 @@ def detect_stage(identified_stage, stage_id=None):
 def get_teacher_response(
     client, student_name, student_response_json, room_info, model_name, cut_word_length=18000
 ):
-    """
-    Description:
-
-    Parameters:
-      param1(type): desc
-    Returns:
-      return1(type): desc
-    Outputs:
-      output1(type): desc
-    """
     # set teacher agent
     teacher_agent = set_teacher(client)
     # teacher intervention

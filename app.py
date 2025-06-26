@@ -5,14 +5,9 @@ from threading import Thread
 from flask_cors import CORS
 from datetime import datetime
 from openai import OpenAI
-import eventlet
-from llm import query_api
-import os
-import json
 import random
 import random
 import string
-import time
 from database import connect_database
 from bson import ObjectId
 from agent_utils import get_student_agent_response, get_teacher_response

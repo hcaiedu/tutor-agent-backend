@@ -1,13 +1,3 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-'''
-@filename: prompt_utils.py
-@description: Tool function, used to parse docx and perform regular expression matching， source code from Qihao  
-@time: 2025/06/22
-@author: Haoli WANG
-@Version: 1.0
-'''
-
 import re
 import json
 import ast

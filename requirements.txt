@@ -1,0 +1,10 @@
+eventlet==0.40.1
+Flask==3.1.1
+flask_cors==5.0.1
+Flask_SocketIO==5.5.1
+openai==1.91.0
+pandas==2.3.0
+pymongo==4.13.2
+python_docx==1.2.0
+tqdm==4.67.1
+transformers==4.52.4
